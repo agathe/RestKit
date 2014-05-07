@@ -50,6 +50,11 @@
 // Integration with LibComponentLogging Core.
 //
 
+#import <CocoaLumberjack/DDLog.h>
+
+#ifndef LCLNSLog_RK____FILEEXTENSION___
+#define LCLNSLog_RK____FILEEXTENSION___
+
 
 // ARC/non-ARC autorelease pool
 #define _RKlcl_logger_autoreleasepool_arc 0
@@ -71,12 +76,33 @@
     [_RKlcl_logger_autoreleasepool release];
 #endif
 
+#ifndef LUMBERJACK_DDLOGLEVEL
+    #define LUMBERJACK_DDLOGLEVEL
+    #if VERBOSE_LOG
+        static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+    #endif
+    #if DEBUG_LOG
+        static const int ddLogLevel = LOG_LEVEL_DEBUG;
+    #endif
+    #if INFO_LOG
+        static const int ddLogLevel = LOG_LEVEL_INFO;
+    #endif
+    #if WARN_LOG
+        static const int ddLogLevel = LOG_LEVEL_WARN;
+    #endif
+    #if ERROR_LOG
+        static const int ddLogLevel = LOG_LEVEL_ERROR;
+    #endif
+    #if OFF_LOG
+        static const int ddLogLevel = LOG_LEVEL_OFF;
+    #endif
+#endif
 
 // A very simple logger, which redirects to NSLog().
 #if 0
 #define _RKlcl_logger(_component, _level, _format, ...) {                        \
     _RKlcl_logger_autoreleasepool_begin                                          \
-    NSLog(@"%s %s:%@:%d:%s " _format,                                          \
+    DDLogVerbose(@"%s %s:%@:%d:%s " _format,                                          \
           _RKlcl_level_header_1[_level],                                         \
           _RKlcl_component_header[_component],                                   \
           [@__FILE__ lastPathComponent],                                       \
@@ -88,7 +114,7 @@
 #else
 #define _RKlcl_logger(_component, _level, _format, ...) {                        \
     _RKlcl_logger_autoreleasepool_begin                                          \
-    NSLog(@"%s %s:%@:%d " _format,                                             \
+    DDLogCVerbose(@"%s %s:%@:%d " _format,                                       \
           _RKlcl_level_header_1[_level],                                         \
           _RKlcl_component_header[_component],                                   \
           [@__FILE__ lastPathComponent],                                       \
@@ -96,5 +122,7 @@
           ## __VA_ARGS__);                                                     \
     _RKlcl_logger_autoreleasepool_end                                            \
 }
+#endif
+
 #endif
 
