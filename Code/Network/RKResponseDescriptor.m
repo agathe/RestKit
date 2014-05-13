@@ -112,7 +112,14 @@ extern NSString *RKStringDescribingRequestMethod(RKRequestMethod method);
 
 - (BOOL)matchesURL:(NSURL *)_URL
 {
-    NSURL *URL = [NSURL URLWithString:[_URL.absoluteString stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"] relativeToURL:nil];;
+
+    NSURL *URL = _URL;
+    if(![self.baseURL.absoluteString isEqualToString:URL.baseURL.absoluteString]){
+        URL = [NSURL URLWithString:[URL.absoluteString stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"] relativeToURL:nil];
+        if (![self.baseURL.absoluteString isEqualToString:URL.baseURL.absoluteString]){
+            URL = [NSURL URLWithString:[URL.absoluteString stringByReplacingOccurrencesOfString:@"https:" withString:@"http:"] relativeToURL:nil];
+        }
+    }
 
     NSString *pathAndQueryString = RKPathAndQueryStringFromURLRelativeToURL(URL, self.baseURL);
     if (self.baseURL) {
@@ -121,6 +128,7 @@ extern NSString *RKStringDescribingRequestMethod(RKRequestMethod method);
     } else {
         return [self matchesPath:pathAndQueryString];
     }
+        }
 }
 
 - (BOOL)matchesResponse:(NSHTTPURLResponse *)response
