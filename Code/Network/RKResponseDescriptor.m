@@ -110,8 +110,10 @@ extern NSString *RKStringDescribingRequestMethod(RKRequestMethod method);
     return [pathMatcher matchesPath:path tokenizeQueryStrings:NO parsedArguments:nil];
 }
 
-- (BOOL)matchesURL:(NSURL *)URL
+- (BOOL)matchesURL:(NSURL *)_URL
 {
+    NSURL *URL = [NSURL URLWithString:[_URL.absoluteString stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"] relativeToURL:nil];;
+
     NSString *pathAndQueryString = RKPathAndQueryStringFromURLRelativeToURL(URL, self.baseURL);
     if (self.baseURL) {
         if (! RKURLIsRelativeToURL(URL, self.baseURL)) return NO;
