@@ -128,7 +128,7 @@ extern NSString *RKStringDescribingRequestMethod(RKRequestMethod method);
     } else {
         return [self matchesPath:pathAndQueryString];
     }
-        }
+
 }
 
 - (BOOL)matchesResponse:(NSHTTPURLResponse *)response
