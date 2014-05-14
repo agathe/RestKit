@@ -114,13 +114,13 @@ extern NSString *RKStringDescribingRequestMethod(RKRequestMethod method);
 {
 
     NSURL *URL = _URL;
-    if(![self.baseURL.absoluteString isEqualToString:URL.baseURL.absoluteString]){
+    if (! RKURLIsRelativeToURL(URL, self.baseURL)){
         URL = [NSURL URLWithString:[URL.absoluteString stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"] relativeToURL:nil];
-        if (![self.baseURL.absoluteString isEqualToString:URL.baseURL.absoluteString]){
+        if (! RKURLIsRelativeToURL(URL, self.baseURL)){
             URL = [NSURL URLWithString:[URL.absoluteString stringByReplacingOccurrencesOfString:@"https:" withString:@"http:"] relativeToURL:nil];
+
         }
     }
-
     NSString *pathAndQueryString = RKPathAndQueryStringFromURLRelativeToURL(URL, self.baseURL);
     if (self.baseURL) {
         if (! RKURLIsRelativeToURL(URL, self.baseURL)) return NO;
